@@ -1,0 +1,14 @@
+{
+    "USER": {
+        "scopes": ["runs", "locations"],
+        "expiry": "7d"
+    },
+    "AGENT": {
+        "scopes": ["users", "runs", "locations"],
+        "expiry": "30m"
+    },
+    "ADMIN": {
+        "scopes": ["admins", "agents", "users", "runs", "locations"],
+        "expiry": "30m"
+    }
+}
