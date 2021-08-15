@@ -1,0 +1,18 @@
+build:
+  # Use the official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+
+  script:
+    - docker compose build
+
+test:
+  # Use the official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - bash run_tests.sh
