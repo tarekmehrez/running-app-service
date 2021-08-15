@@ -21,7 +21,8 @@ def validate_admin_token(user_token_data: Dict = Depends(check_admin_perm)):
 
     if user_type != "ADMIN":
         raise create_403_exception(
-            ErrorTypes.REQUIRED_SCOPE_NOT_FOUND, f"user {user_id} is not admin",
+            ErrorTypes.REQUIRED_SCOPE_NOT_FOUND,
+            f"user {user_id} is not admin",
         )
     return user_token_data
 
@@ -46,7 +47,8 @@ async def get_users(
 
 
 @router.post(
-    "/users", status_code=status.HTTP_200_OK,
+    "/users",
+    status_code=status.HTTP_200_OK,
 )
 async def create_user(
     credentials: users_validator.UserSignup,
@@ -81,7 +83,8 @@ async def get_agents(
 
 
 @router.post(
-    "/agents", status_code=status.HTTP_200_OK,
+    "/agents",
+    status_code=status.HTTP_200_OK,
 )
 async def create_user(
     credentials: users_validator.UserSignup,
@@ -116,7 +119,8 @@ async def get_admins(
 
 
 @router.post(
-    "/admins", status_code=status.HTTP_200_OK,
+    "/admins",
+    status_code=status.HTTP_200_OK,
 )
 async def create_user(
     credentials: users_validator.UserSignup,

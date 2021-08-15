@@ -46,4 +46,3 @@ async def sign_token(payload: dict) -> str:
     except Exception as e:
         logging.error(f"Failed creating token for user {e}")
         raise e
-

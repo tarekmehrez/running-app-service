@@ -56,4 +56,3 @@ def test_user_login_200(client):
         url, json={"email": "test@test.com", "password": "TestPass123!"}
     )
     assert response.status_code == 200
-

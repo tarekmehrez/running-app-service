@@ -39,6 +39,4 @@ async def get_runs_locations(
 ):
     user_id = user_token_data["user_id"]
     logging.info(f"Getting all locations for run {run_id}")
-    return await locations_actions.get_run_locations(
-        user_id=user_id, run_id=run_id
-    )
+    return await locations_actions.get_run_locations(user_id=user_id, run_id=run_id)

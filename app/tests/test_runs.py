@@ -30,6 +30,17 @@ def test_create_run_while_another_is_running(client, create_user, create_token):
     response = client.post(url, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 400
 
+def test_get_user_run_200(client, create_user, create_token, create_run):
+    user_id = create_user()
+    token = create_token(user_id=user_id)
+    run_id = create_run(user_id=user_id)
+
+    url = f"/runs?id={run_id}"
+    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+
+    assert response.status_code == 200
+
+
 
 def test_get_user_runs_200(client, create_user, create_token):
     user_id = create_user()
@@ -62,7 +73,9 @@ def test_patch_user_run_200(client, create_user, create_token):
     response_json = response.json()
     response_json["description"] = "best run ever"
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token}"}, json=response_json,
+        url,
+        headers={"Authorization": f"Bearer {token}"},
+        json=response_json,
     )
     assert response.status_code == 200
 
@@ -77,10 +90,13 @@ def test_patch_user_run_200_end_update_weather(
 
     url = "/runs"
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token}"}, json={"id": run_id, "status": "ENDED"},
+        url,
+        headers={"Authorization": f"Bearer {token}"},
+        json={"id": run_id, "status": "ENDED"},
     )
     assert response.status_code == 200
-    assert "weather" in response.json() 
+    assert "weather" in response.json()
+
 
 def test_patch_user_run_403_other_user_run(client, create_user, create_token):
     user_id_1 = create_user(email="user1@test.com")
@@ -96,7 +112,9 @@ def test_patch_user_run_403_other_user_run(client, create_user, create_token):
     response_json["description"] = "best run ever"
 
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token_2}"}, json=response_json,
+        url,
+        headers={"Authorization": f"Bearer {token_2}"},
+        json=response_json,
     )
     assert response.status_code == 403
 

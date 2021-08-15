@@ -34,6 +34,7 @@ class RunUpdate(BaseModel):
     speed: Optional[float]
     weather: Optional[str]
 
+
 class RunsColumnSummary(BaseModel):
     mean: Optional[float]
     min: Optional[float]

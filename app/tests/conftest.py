@@ -66,7 +66,7 @@ def seed_users_agents_admins():
                     user_type=UserType.ADMIN,
                 )
             )
-    
+
     return seed_data
 
 
@@ -129,7 +129,8 @@ def add_run_locations():
 @pytest.fixture
 def mock_weather_api(mocker):
     def mock_api(
-        response, side_effect=None,
+        response,
+        side_effect=None,
     ):
         future = asyncio.Future()
         future.set_result(response)
@@ -141,4 +142,3 @@ def mock_weather_api(mocker):
         return mock
 
     return mock_api
-

@@ -17,6 +17,7 @@ class ErrorTypes(str, Enum):
     RUN_NOT_IN_PROGRESS = "RUN_NOT_IN_PROGRESS"
     NOT_AN_ADMIN = "NOT_AN_ADMIN"
 
+
 class ErrorResponse(BaseModel):
     msg: str
     type: ErrorTypes

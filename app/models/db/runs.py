@@ -118,7 +118,7 @@ class RunsModel:
         return run is not None
 
     @staticmethod
-    async def get_run_by_id(run_id: str) -> bool:
+    async def get_run_by_id(run_id: str) -> runs_validator.RunsDB:
         query = runs_table.select().where(runs_table.c.id == run_id)
         run = await db.fetch_one(query=query)
         return runs_validator.RunsDB(**run)

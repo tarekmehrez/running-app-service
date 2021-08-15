@@ -25,7 +25,9 @@ async def create_location(
             lat2=last_two_locations[1].lat,
             lon2=last_two_locations[1].lon,
         )
-        await runs_actions.update_distance(run_id=location.run_id, new_distance=distance)
+        await runs_actions.update_distance(
+            run_id=location.run_id, new_distance=distance
+        )
         await runs_actions.update_speed(run_id=location.run_id)
     return location
 
@@ -35,4 +37,3 @@ async def get_run_locations(
 ) -> List[locations_validators.LocationDB]:
     await runs_actions.validate_run_access(run_id, user_id)
     return await locations_db.get_run_locations(run_id)
-

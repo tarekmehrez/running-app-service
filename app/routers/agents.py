@@ -21,7 +21,8 @@ def validate_agent_token(user_token_data: Dict = Depends(check_agent_perm)):
 
     if user_type != "AGENT":
         raise create_403_exception(
-            ErrorTypes.REQUIRED_SCOPE_NOT_FOUND, f"user {user_id} is not agent",
+            ErrorTypes.REQUIRED_SCOPE_NOT_FOUND,
+            f"user {user_id} is not agent",
         )
     return user_token_data
 
@@ -34,17 +35,20 @@ def validate_agent_token(user_token_data: Dict = Depends(check_agent_perm)):
 async def get_users(
     page: int = 1,
     page_count: int = 10,
-    user_token_data: Dict = Depends(validate_agent_token)
+    user_token_data: Dict = Depends(validate_agent_token),
 ):
     user_type = user_token_data["user_type"]
     user_id = user_token_data["user_id"]
 
     logging.info(f"Listing all users for {user_type} {user_id}")
-    return await users_actions.get_users(user_type=users_validator.UserType.USER, page=page, page_count=page_count)
+    return await users_actions.get_users(
+        user_type=users_validator.UserType.USER, page=page, page_count=page_count
+    )
 
 
 @router.post(
-    "/users", status_code=status.HTTP_200_OK,
+    "/users",
+    status_code=status.HTTP_200_OK,
 )
 async def create_user(
     credentials: users_validator.UserSignup,
@@ -57,4 +61,3 @@ async def create_user(
     return await users_actions.create_user(
         credentials=credentials, user_type=users_validator.UserType.USER
     )
-
