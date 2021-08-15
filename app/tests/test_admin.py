@@ -68,6 +68,7 @@ def test_admin_list_agents_200(
     assert response.status_code == 200
     assert len(response.json()["results"]) == 1
 
+
 def test_admin_list_agents_403_normal_user(client, create_user, create_token):
     user_id = create_user(user_type=UserType.USER)
     token = create_token(user_id=user_id, user_type=UserType.USER)
@@ -100,6 +101,7 @@ def test_admin_list_admins_200(
 
     assert response.status_code == 200
     assert len(response.json()["results"]) == 2
+
 
 def test_admin_list_admins_403_normal_user(client, create_user, create_token):
     user_id = create_user(user_type=UserType.USER)

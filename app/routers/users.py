@@ -13,7 +13,8 @@ router = APIRouter()
 
 
 @router.post(
-    "/signup", status_code=status.HTTP_201_CREATED,
+    "/signup",
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(credentials: users_validator.UserSignup):
     logging.info(f"Creating a new user with email {credentials.email}")

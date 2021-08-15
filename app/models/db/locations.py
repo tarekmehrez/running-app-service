@@ -47,11 +47,12 @@ class LocationsModel:
         return created_location
 
     @staticmethod
-    async def get_run_locations(run_id: str, last_n: int=2) -> List[locations_validators.LocationDB]:
+    async def get_run_locations(
+        run_id: str, last_n: int = 2
+    ) -> List[locations_validators.LocationDB]:
 
         query = locations_table.select().where(locations_table.c.run_id == run_id)
 
         run_locations = await db.fetch_all(query=query)
         run_locations = run_locations[-last_n:] if last_n else run_locations
         return parse_obj_as(List[locations_validators.LocationDB], run_locations)
-

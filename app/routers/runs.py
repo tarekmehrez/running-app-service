@@ -38,4 +38,3 @@ async def get_runs(
     user_id = user_token_data["user_id"]
     logging.info(f"Updating run {run.id} for user {user_id}")
     return await runs_actions.update_run(user_id=user_id, run=run)
-

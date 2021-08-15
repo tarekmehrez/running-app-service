@@ -87,7 +87,8 @@ async def raise_if_run_doesnt_exist(run_id: str):
     run_exists = await runs_db.run_exists(run_id)
     if not run_exists:
         raise create_404_exception(
-            ErrorTypes.RUN_NOT_FOUND, f"run {run_id} not found",
+            ErrorTypes.RUN_NOT_FOUND,
+            f"run {run_id} not found",
         )
 
 
@@ -95,5 +96,6 @@ async def raise_if_not_in_progress(run_id: str):
     run = await runs_db.get_run_by_id(run_id)
     if run.status != runs_validator.RunStatus.IN_PROGRESS:
         raise create_400_exception(
-            ErrorTypes.RUN_NOT_IN_PROGRESS, f"run {run_id} not in progress",
+            ErrorTypes.RUN_NOT_IN_PROGRESS,
+            f"run {run_id} not in progress",
         )

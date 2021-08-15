@@ -41,4 +41,3 @@ def test_user_basic_flow(client):
         json={"id": run_id, "status": "ENDED"},
     )
     assert response.status_code == 200
-

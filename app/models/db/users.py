@@ -62,7 +62,9 @@ USER_TABLES_DICT = {
 class UserModel:
     @staticmethod
     async def list(
-        user_type: users_validator.UserType, page: int = None, page_count: int = None,
+        user_type: users_validator.UserType,
+        page: int = None,
+        page_count: int = None,
     ) -> users_validator.UsersPaginate:
         table = USER_TABLES_DICT[user_type]
 
@@ -89,7 +91,8 @@ class UserModel:
 
     @staticmethod
     async def insert(
-        user: users_validator.UserSignup, user_type: users_validator.UserType,
+        user: users_validator.UserSignup,
+        user_type: users_validator.UserType,
     ) -> users_validator.UsersDB:
         table = USER_TABLES_DICT[user_type]
         uid = str(uuid.uuid4())
