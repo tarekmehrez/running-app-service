@@ -1,5 +1,4 @@
 build:
-  # Use the official docker image.
   image: docker:latest
   stage: build
   services:
@@ -9,7 +8,6 @@ build:
     - docker compose build
 
 test:
-  # Use the official docker image.
   image: docker:latest
   stage: build
   services:
