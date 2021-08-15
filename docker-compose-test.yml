@@ -1,9 +1,9 @@
 version: "3.3"
 services:
-  app:
+  test:
     build: .
     command: bin/entrypoint.sh --migrate --wait --test
-    container_name: jogging-service
+    container_name: jogging-service-test
     environment:
       - DEVELOPMENT=1
       - DATABASE_HOST=db
