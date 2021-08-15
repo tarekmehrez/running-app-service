@@ -28,6 +28,12 @@ async def get_runs_for_user(user_id: str, query=str) -> runs_validator.RunsRepor
     return await runs_db.get_runs(user_id=user_id, filter_query=query)
 
 
+async def get_run_by_id(run_id: str, user_id: str) -> runs_validator.RunsDB:
+    await raise_if_run_doesnt_exist(run_id)
+    await raise_if_not_run_owner(run_id, user_id)
+    return await runs_db.get_run_by_id(run_id)
+
+
 async def update_run(
     user_id: str, run: runs_validator.RunUpdate
 ) -> runs_validator.RunsDB:
@@ -87,8 +93,7 @@ async def raise_if_run_doesnt_exist(run_id: str):
     run_exists = await runs_db.run_exists(run_id)
     if not run_exists:
         raise create_404_exception(
-            ErrorTypes.RUN_NOT_FOUND,
-            f"run {run_id} not found",
+            ErrorTypes.RUN_NOT_FOUND, f"run {run_id} not found",
         )
 
 
@@ -96,6 +101,5 @@ async def raise_if_not_in_progress(run_id: str):
     run = await runs_db.get_run_by_id(run_id)
     if run.status != runs_validator.RunStatus.IN_PROGRESS:
         raise create_400_exception(
-            ErrorTypes.RUN_NOT_IN_PROGRESS,
-            f"run {run_id} not in progress",
+            ErrorTypes.RUN_NOT_IN_PROGRESS, f"run {run_id} not in progress",
         )
