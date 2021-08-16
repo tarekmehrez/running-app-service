@@ -13,7 +13,8 @@ router = APIRouter()
 
 
 @router.get(
-    "", status_code=status.HTTP_200_OK,
+    "",
+    status_code=status.HTTP_200_OK,
 )
 async def get_weather_forecast(
     lat: float,
@@ -21,7 +22,5 @@ async def get_weather_forecast(
     user_id: str = Depends(check_user_perm),
 ):
     logging.info(f"Getting weather forecast for user {user_id}")
-    forecast = await weather_api.get_weather_forecast(
-        query=f"{lat},{lon}"
-    )
+    forecast = await weather_api.get_weather_forecast(query=f"{lat},{lon}")
     return weather_validators.WeatherForecastResponse(**forecast)

@@ -1,3 +1,4 @@
+from logging import error
 import uuid
 from typing import List
 
@@ -13,6 +14,7 @@ from sqlalchemy import JSON
 from sqlalchemy import func
 from sqlalchemy import desc
 
+from app import errors
 from app.providers import db
 from app.providers import metadata
 from app.models.validators import runs as runs_validator
@@ -38,6 +40,10 @@ runs_table_cols = [c for c in runs_table.c]
 class RunsModel:
     @staticmethod
     async def insert_run(user_id: str) -> runs_validator.RunsDB:
+        """
+        create new uid
+        insert new run with status in progress
+        """
         uid = str(uuid.uuid4())
         query = runs_table.insert().returning(*runs_table_cols)
         run = {
@@ -53,7 +59,10 @@ class RunsModel:
 
     @staticmethod
     async def update_run(run: runs_validator.RunUpdate) -> runs_validator.RunsDB:
-
+        """
+        exclude id, that wont be updated
+        update run with new values
+        """
         query = (
             runs_table.update()
             .where(runs_table.c.id == run.id)
@@ -68,6 +77,14 @@ class RunsModel:
     async def get_runs(
         user_id: str, filter_query: str = "", summary: bool = True
     ) -> runs_validator.RunsReport:
+        """
+        all get run requests return a report at this point
+        a report is a list of runs with a summary
+        a summary is basic stats on distance and speed
+        a query can be applied to filter the returned runs for any given field
+
+        querying is done through pandas query function
+        """
         # get runs from the database
         query = (
             runs_table.select()
@@ -79,7 +96,13 @@ class RunsModel:
 
         # filter based on user's query
         if filter_query:
-            runs_df = runs_df.query(filter_query)
+            try:
+                runs_df = runs_df.query(filter_query)
+            except Exception as e:
+                raise errors.create_400_exception(
+                    errors.ErrorTypes.BAD_QUERY,
+                    f"bad query: {e}",
+                )
 
         runs_dict = runs_df.to_dict(orient="records")
         runs_obj = parse_obj_as(List[runs_validator.RunsDB], runs_dict)
@@ -96,12 +119,14 @@ class RunsModel:
 
     @staticmethod
     async def get_run_owner(run_id: str) -> str:
+        """get user id of a run"""
         query = runs_table.select().where(runs_table.c.id == run_id)
         run = await db.fetch_one(query=query)
         return run["user_id"]
 
     @staticmethod
     async def has_ongoing_runs(user_id: str) -> bool:
+        """check if the user has runs with status in progress"""
         query = (
             runs_table.select()
             .order_by(desc(runs_table.c.created_at))
@@ -113,12 +138,14 @@ class RunsModel:
 
     @staticmethod
     async def run_exists(run_id: str) -> bool:
+        """check if run id exists"""
         query = runs_table.select().where(runs_table.c.id == run_id)
         run = await db.fetch_one(query=query)
         return run is not None
 
     @staticmethod
     async def get_run_by_id(run_id: str) -> bool:
+        """return run record for a specific id"""
         query = runs_table.select().where(runs_table.c.id == run_id)
         run = await db.fetch_one(query=query)
         return runs_validator.RunsDB(**run)

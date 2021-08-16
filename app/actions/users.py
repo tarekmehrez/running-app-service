@@ -1,6 +1,5 @@
 import logging
 
-from fastapi import Depends
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
@@ -15,6 +14,7 @@ password_hasher = PasswordHasher(
 
 
 async def get_user(user_type: users_validator.UserType, **kwargs):
+    """return user if exists"""
     user = await users_db.get(user_type=user_type, **kwargs)
     if not user:
         raise errors.create_404_exception(
@@ -26,12 +26,13 @@ async def get_user(user_type: users_validator.UserType, **kwargs):
 async def create_user(
     credentials: users_validator.UserSignup, user_type: users_validator.UserType
 ):
+    """create a new user if email doesnt already exist"""
     user = await users_db.get(user_type=user_type, email=credentials.email)
 
     if user:
         raise errors.create_409_exception(
             code=errors.ErrorTypes.EMAIL_EXISTS,
-            message="User email already exists for user",
+            message="User email already exists",
         )
 
     credentials.password = password_hasher.hash(credentials.password)
@@ -43,6 +44,7 @@ async def create_user(
 async def create_user_token(
     credentials: users_validator.UserLogin, user_type: users_validator.UserType
 ) -> users_validator.AuthToken:
+    """create a new login token for the user if she exists"""
     user = await users_db.get(user_type=user_type, email=credentials.email)
     if not user:
         raise errors.create_404_exception(
@@ -63,4 +65,5 @@ async def create_user_token(
 async def get_users(
     user_type: users_validator.UserType, page: int, page_count: int
 ) -> users_validator.UsersPaginate:
+    """get all users for a specific usertype"""
     return await users_db.list(user_type=user_type, page=page, page_count=page_count)

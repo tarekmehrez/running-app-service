@@ -45,4 +45,3 @@ class UserType(str, Enum):
     USER = "USER"
     AGENT = "AGENT"
     ADMIN = "ADMIN"
-

@@ -19,7 +19,9 @@ class AppSettings:
 config = AppSettings()
 
 jogging_app = FastAPI(
-    title="Assets Service", version="1.0.0", root_path=settings.DOCS_PREFIX,
+    title="Assets Service",
+    version="1.0.0",
+    root_path=settings.DOCS_PREFIX,
 )
 
 
@@ -40,26 +42,38 @@ def health():
 
 
 jogging_app.include_router(
-    routers.users, prefix="/users", tags=["users"],
+    routers.users,
+    prefix="/users",
+    tags=["users"],
 )
 
 
 jogging_app.include_router(
-    routers.runs, prefix="/runs", tags=["runs"],
+    routers.runs,
+    prefix="/runs",
+    tags=["runs"],
 )
 
 jogging_app.include_router(
-    routers.weather, prefix="/weather", tags=["weather"],
+    routers.weather,
+    prefix="/weather",
+    tags=["weather"],
 )
 
 jogging_app.include_router(
-    routers.locations, prefix="/locations", tags=["locations"],
+    routers.locations,
+    prefix="/locations",
+    tags=["locations"],
 )
 
 jogging_app.include_router(
-    routers.admins, prefix="/admins", tags=["admins"],
+    routers.admins,
+    prefix="/admins",
+    tags=["admins"],
 )
 
 jogging_app.include_router(
-    routers.agents, prefix="/agents", tags=["agents"],
+    routers.agents,
+    prefix="/agents",
+    tags=["agents"],
 )

@@ -1,14 +1,11 @@
 import uuid
-from typing import List
 
-from pydantic import parse_obj_as
 from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import UniqueConstraint
 from sqlalchemy import func
-from sqlalchemy import select
 
 from app.models.validators import users as users_validator
 from app.providers import db
@@ -62,8 +59,15 @@ USER_TABLES_DICT = {
 class UserModel:
     @staticmethod
     async def list(
-        user_type: users_validator.UserType, page: int = None, page_count: int = None,
+        user_type: users_validator.UserType,
+        page: int = None,
+        page_count: int = None,
     ) -> users_validator.UsersPaginate:
+        """
+        fetch user table corresponding to type
+        get users and remove password from returned records
+        return a paginated list for a given page number and count
+        """
         table = USER_TABLES_DICT[user_type]
 
         list_query = table.select()
@@ -89,8 +93,14 @@ class UserModel:
 
     @staticmethod
     async def insert(
-        user: users_validator.UserSignup, user_type: users_validator.UserType,
+        user: users_validator.UserSignup,
+        user_type: users_validator.UserType,
     ) -> users_validator.UsersDB:
+        """
+        fetch user table corresponding to type
+        create a new uid
+        insert new user
+        """
         table = USER_TABLES_DICT[user_type]
         uid = str(uuid.uuid4())
         query = table.insert().returning(*[col for col in table.c])
@@ -105,6 +115,13 @@ class UserModel:
     async def get(
         user_type: users_validator.UserType, id: str = None, email: str = None
     ) -> users_validator.UsersDB:
+        """
+        fetch user table corresponding to type
+        fetch user based on email or id
+        """
+        if not (id or email):
+            raise ValueError("Missing id or email as input to the user get function")
+
         table = USER_TABLES_DICT[user_type]
 
         if email:

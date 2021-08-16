@@ -62,7 +62,9 @@ def test_patch_user_run_200(client, create_user, create_token):
     response_json = response.json()
     response_json["description"] = "best run ever"
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token}"}, json=response_json,
+        url,
+        headers={"Authorization": f"Bearer {token}"},
+        json=response_json,
     )
     assert response.status_code == 200
 
@@ -77,10 +79,13 @@ def test_patch_user_run_200_end_update_weather(
 
     url = "/runs"
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token}"}, json={"id": run_id, "status": "ENDED"},
+        url,
+        headers={"Authorization": f"Bearer {token}"},
+        json={"id": run_id, "status": "ENDED"},
     )
     assert response.status_code == 200
-    assert "weather" in response.json() 
+    assert "weather" in response.json()
+
 
 def test_patch_user_run_403_other_user_run(client, create_user, create_token):
     user_id_1 = create_user(email="user1@test.com")
@@ -96,7 +101,9 @@ def test_patch_user_run_403_other_user_run(client, create_user, create_token):
     response_json["description"] = "best run ever"
 
     response = client.patch(
-        url, headers={"Authorization": f"Bearer {token_2}"}, json=response_json,
+        url,
+        headers={"Authorization": f"Bearer {token_2}"},
+        json=response_json,
     )
     assert response.status_code == 403
 
@@ -197,3 +204,31 @@ def test_runs_reports_200_with_query(
     assert "runs" in response_json
     assert "summary" in response_json
     assert len(response_json["runs"]) == 2
+
+
+def test_runs_reports_400_with_query(
+    client, create_user, create_token, create_run, add_run_locations
+):
+    user_id = create_user()
+    token = create_token(user_id=user_id)
+
+    # create and end run 1
+    run_id_1 = create_run(user_id)
+    add_run_locations(run_id_1, user_id)
+
+    response = client.patch(
+        "/runs",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"id": run_id_1, "status": "ENDED"},
+    )
+    assert response.status_code == 200
+
+    time_checkpoint = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    url = f'/runs?query=some_random_field < "{time_checkpoint}"'
+    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 400
+
+    url = f'/runs?query=created_at < "definitely not a timestamp"'
+    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 400

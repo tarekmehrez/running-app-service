@@ -34,6 +34,10 @@ class LocationsModel:
     async def insert_location(
         location: locations_validators.LocationCreateRequest,
     ) -> locations_validators.LocationDB:
+        """
+        create a new uid
+        insert new location
+        """
         uid = str(uuid.uuid4())
         query = locations_table.insert().returning(*locations_table_cols)
         location = location.dict()
@@ -47,11 +51,15 @@ class LocationsModel:
         return created_location
 
     @staticmethod
-    async def get_run_locations(run_id: str, last_n: int=2) -> List[locations_validators.LocationDB]:
-
+    async def get_run_locations(
+        run_id: str, last_n: int = 2
+    ) -> List[locations_validators.LocationDB]:
+        """
+        get all locations for a given run
+        return last n if requested
+        """
         query = locations_table.select().where(locations_table.c.run_id == run_id)
 
         run_locations = await db.fetch_all(query=query)
         run_locations = run_locations[-last_n:] if last_n else run_locations
         return parse_obj_as(List[locations_validators.LocationDB], run_locations)
-

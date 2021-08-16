@@ -1,19 +1,18 @@
 import logging
-from typing import List
 
 from fastapi import APIRouter
 from fastapi import status
-from fastapi import Depends
+
 
 from app.models.validators import users as users_validator
 from app.actions import users as users_actions
-from app.middlewares.auth import check_user_perm
 
 router = APIRouter()
 
 
 @router.post(
-    "/signup", status_code=status.HTTP_201_CREATED,
+    "/signup",
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(credentials: users_validator.UserSignup):
     logging.info(f"Creating a new user with email {credentials.email}")

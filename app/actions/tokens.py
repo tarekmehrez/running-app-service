@@ -28,7 +28,10 @@ async def create_token(
 
 
 async def generate_token_payload(user_type: users_validator.UserType) -> dict:
-
+    """
+    calculate expiry timestamp
+    prepare token payload with scopes and user type
+    """
     values = TOKEN_SCOPES[user_type]
     expiry = values["expiry"]
 
@@ -39,11 +42,10 @@ async def generate_token_payload(user_type: users_validator.UserType) -> dict:
 
 
 async def sign_token(payload: dict) -> str:
-
+    """encode jwt token"""
     try:
         token = jwt.encode(payload, PRIV_KEY, algorithm=settings.JWT_ALGO)
         return token
     except Exception as e:
         logging.error(f"Failed creating token for user {e}")
         raise e
-

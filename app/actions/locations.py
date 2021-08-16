@@ -10,9 +10,10 @@ async def create_location(
     user_id: str, location: locations_validators.LocationCreateRequest
 ) -> locations_validators.LocationDB:
     """
+    valdiate user access to this run
     Add a new location to the run
     Check if the run has more than 1 location already, calculate distance for the last two locations
-    Add the new distance to the run
+    Add the new distance and speed to the run
     """
     await runs_actions.validate_run_access(location.run_id, user_id)
     location = await locations_db.insert_location(location)
@@ -25,7 +26,9 @@ async def create_location(
             lat2=last_two_locations[1].lat,
             lon2=last_two_locations[1].lon,
         )
-        await runs_actions.update_distance(run_id=location.run_id, new_distance=distance)
+        await runs_actions.update_distance(
+            run_id=location.run_id, new_distance=distance
+        )
         await runs_actions.update_speed(run_id=location.run_id)
     return location
 
@@ -33,6 +36,9 @@ async def create_location(
 async def get_run_locations(
     user_id, run_id: str
 ) -> List[locations_validators.LocationDB]:
+    """
+    valdiate user access to this run
+    get a list of all locations for a specific run
+    """
     await runs_actions.validate_run_access(run_id, user_id)
     return await locations_db.get_run_locations(run_id)
-

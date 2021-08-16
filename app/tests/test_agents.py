@@ -49,4 +49,3 @@ def test_agent_create_user_403_normal_user(client, create_user, create_token):
         json={"email": "email@email.com", "password": "password123456"},
     )
     assert response.status_code == 403
-

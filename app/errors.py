@@ -16,6 +16,8 @@ class ErrorTypes(str, Enum):
     BAD_REQUEST = "BAD_REQUEST"
     RUN_NOT_IN_PROGRESS = "RUN_NOT_IN_PROGRESS"
     NOT_AN_ADMIN = "NOT_AN_ADMIN"
+    BAD_QUERY = "BAD_QUERY"
+
 
 class ErrorResponse(BaseModel):
     msg: str

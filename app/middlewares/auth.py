@@ -14,7 +14,6 @@ with open(settings.JWT_PUB_KEY_PATH) as f:
     PUB_KEY = f.read()
 
 
-
 class VerifyUserToken:
     def __init__(self, scopes: FrozenSet[str]):
         self.scopes = scopes
@@ -25,7 +24,11 @@ class VerifyUserToken:
 
         try:
             token = creds.credentials
-            decoded = jwt.decode(token, PUB_KEY, algorithms=settings.JWT_ALGO,)
+            decoded = jwt.decode(
+                token,
+                PUB_KEY,
+                algorithms=settings.JWT_ALGO,
+            )
             uid = decoded["uid"]
             scopes = decoded["scopes"]
             user_type = decoded["user_type"]
@@ -50,7 +53,7 @@ class VerifyUserToken:
             jwt.exceptions.DecodeError,
             jwt.exceptions.InvalidTokenError,
             jwt.exceptions.InvalidKeyError,
-            jwt.exceptions.ExpiredSignatureError
+            jwt.exceptions.ExpiredSignatureError,
         ) as e:
             logging.warning(f"Invalid token {e}")
             raise create_403_exception(ErrorTypes.INVALID_TOKEN, "")
