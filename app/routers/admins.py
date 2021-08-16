@@ -86,7 +86,7 @@ async def get_agents(
     "/agents",
     status_code=status.HTTP_200_OK,
 )
-async def create_user(
+async def create_agent(
     credentials: users_validator.UserSignup,
     user_token_data: Dict = Depends(validate_admin_token),
 ):

@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 COPY . /app
 WORKDIR /app
 
-# USER ${APP_USER}:${APP_USER}
+USER ${APP_USER}:${APP_USER}

@@ -13,7 +13,7 @@ docker-compose up --build -d
 
 ### To run the tests
 ```
-bash run_tests.sh
+bash bin/run_tests.sh
 ```
 
 ### To test the APIs

@@ -53,7 +53,7 @@ async def create_user_token(
 
     try:
         password_hasher.verify(user.password, credentials.password)
-    except VerifyMismatchError as e:
+    except VerifyMismatchError as _:
         logging.error(f"cannot login for user {user.id} incorrect password")
         raise errors.create_401_exception(
             code=errors.ErrorTypes.INCORRECT_PASSWORD, message="Incorrect Password"
