@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi import status
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app import routers
 from app import settings
@@ -23,6 +24,8 @@ jogging_app = FastAPI(
     version="1.0.0",
     root_path=settings.DOCS_PREFIX,
 )
+instrumentator = Instrumentator().instrument(jogging_app).expose(jogging_app)
+instrumentator.expose(jogging_app, include_in_schema=False, should_gzip=True)
 
 
 @jogging_app.on_event("startup")

@@ -19,6 +19,7 @@ class ErrorTypes(str, Enum):
     BAD_QUERY = "BAD_QUERY"
 
 
+
 class ErrorResponse(BaseModel):
     msg: str
     type: ErrorTypes

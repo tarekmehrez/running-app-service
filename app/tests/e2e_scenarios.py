@@ -1,4 +1,7 @@
+from datetime import datetime
+
 def test_user_basic_flow(client):
+    time_checkpoint = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
     # sign up
     response = client.post(
@@ -26,6 +29,20 @@ def test_user_basic_flow(client):
     )
     assert response.status_code == 201
 
+    response = client.post(
+        "/locations",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"run_id": run_id, "lat": 60.6, "lon": 100.6},
+    )
+    assert response.status_code == 201
+
+    response = client.post(
+        "/locations",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"run_id": run_id, "lat": 60.7, "lon": 100.7},
+    )
+    assert response.status_code == 201
+
     # pause run
     response = client.patch(
         "/runs",
@@ -41,3 +58,14 @@ def test_user_basic_flow(client):
         json={"id": run_id, "status": "ENDED"},
     )
     assert response.status_code == 200
+<<<<<<< HEAD
+=======
+
+    # get runs
+    response = client.get(
+        f'/runs?query=created_at < "{time_checkpoint}"',
+        headers={"Authorization": f"Bearer {token}"},
+        json={"id": run_id, "status": "ENDED"},
+    )
+    assert response.status_code == 200
+>>>>>>> d1ccdf41054d412e1da99c72d86d5d1b562424b7

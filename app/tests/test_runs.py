@@ -30,6 +30,17 @@ def test_create_run_while_another_is_running(client, create_user, create_token):
     response = client.post(url, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 400
 
+def test_get_user_run_200(client, create_user, create_token, create_run):
+    user_id = create_user()
+    token = create_token(user_id=user_id)
+    run_id = create_run(user_id=user_id)
+
+    url = f"/runs?id={run_id}"
+    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+
+    assert response.status_code == 200
+
+
 
 def test_get_user_runs_200(client, create_user, create_token):
     user_id = create_user()

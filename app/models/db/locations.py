@@ -54,10 +54,14 @@ class LocationsModel:
     async def get_run_locations(
         run_id: str, last_n: int = 2
     ) -> List[locations_validators.LocationDB]:
+<<<<<<< HEAD
         """
         get all locations for a given run
         return last n if requested
         """
+=======
+
+>>>>>>> d1ccdf41054d412e1da99c72d86d5d1b562424b7
         query = locations_table.select().where(locations_table.c.run_id == run_id)
 
         run_locations = await db.fetch_all(query=query)

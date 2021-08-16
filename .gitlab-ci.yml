@@ -1,0 +1,16 @@
+build:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+
+  script:
+    - docker compose build
+
+test:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - bash run_tests.sh
