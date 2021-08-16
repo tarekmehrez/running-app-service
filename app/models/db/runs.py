@@ -110,8 +110,10 @@ class RunsModel:
         result = runs_validator.RunsReport(runs=runs_obj)
 
         # get summary of selected runs
-        if summary:
-            summary_dict = runs_df.describe(include="all").to_dict()
+        if not runs_df.empty and summary:
+            summary_dict = (
+                runs_df[["distance", "speed"]].describe(include="all").to_dict()
+            )
             summary_obj = runs_validator.RunsSummary(**summary_dict)
             result.summary = summary_obj
 
@@ -144,12 +146,8 @@ class RunsModel:
         return run is not None
 
     @staticmethod
-<<<<<<< HEAD
-    async def get_run_by_id(run_id: str) -> bool:
-        """return run record for a specific id"""
-=======
     async def get_run_by_id(run_id: str) -> runs_validator.RunsDB:
->>>>>>> d1ccdf41054d412e1da99c72d86d5d1b562424b7
+        """return run record for a specific id"""
         query = runs_table.select().where(runs_table.c.id == run_id)
         run = await db.fetch_one(query=query)
         return runs_validator.RunsDB(**run)

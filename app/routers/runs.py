@@ -33,9 +33,7 @@ async def get_runs(query: str = None, user_token_data: Dict = Depends(check_user
 @router.get(
     "/{id}", status_code=status.HTTP_200_OK, response_model=runs_validator.RunsDB
 )
-async def get_run(
-    id: str = None, user_token_data: Dict = Depends(check_user_perm)
-):
+async def get_run(id: str = None, user_token_data: Dict = Depends(check_user_perm)):
     user_id = user_token_data["user_id"]
     logging.info(f"Getting run {id} for user {user_id}")
     return await runs_actions.get_run_by_id(run_id=id, user_id=user_id)
